@@ -21,6 +21,7 @@ train is "transmitted" by writing each bit onto a qubit with an X gate and
 reading it back with a measurement, then decoded back into text.
 """
 
+import argparse
 from itertools import groupby
 
 import cirq
@@ -106,24 +107,60 @@ def transmit_via_qubits(pulse_train: str, batch_size: int = 16) -> str:
     return "".join(received)
 
 
-def main() -> None:
-    message = "SOS HELP"
+EXAMPLE_MESSAGES = ["SOS HELP", "HELLO", "CQ DE W1AW 73", "A"]
+
+
+def run_message(message: str) -> str:
+    """Encode `message`, send it through the simulated qubits, decode it, and print each stage.
+
+    Returns the decoded text so callers (or a script) can check it against the input.
+    """
     print(f"Message: {message!r}")
 
+    # Text -> Morse: standard dot/dash notation, letters space-separated, words separated by '/'.
     morse = text_to_morse(message)
     print(f"\nMorse:       {morse}")
 
+    # Morse -> pulse train: ITU timing as a bit string (dot=1 unit on, dash=3, gaps of 1/3/7).
     pulse_train = morse_to_pulse_train(morse)
     print(f"Pulse train: {pulse_train}")
 
+    # The "device": each pulse bit is written onto a qubit with X and read back by measuring it.
     received = transmit_via_qubits(pulse_train)
     print(f"\nRead back from qubits: {received}")
+    # True as long as the qubits round-trip the bits faithfully (no noise is simulated here).
     print(f"Matches sent pulses:   {received == pulse_train}")
 
+    # Pulse train -> Morse -> text: the inverse of the two encoding steps above.
     decoded_morse = pulse_train_to_morse(received)
     decoded_text = morse_to_text(decoded_morse)
     print(f"\nDecoded Morse: {decoded_morse}")
     print(f"Decoded text:  {decoded_text!r}")
+
+    return decoded_text
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Encode a message as Morse, transmit it through simulated qubits, decode it back."
+    )
+    parser.add_argument(
+        "message",
+        nargs="?",
+        default=None,
+        help="Text to send (letters, digits, spaces). Omit to run the built-in example messages instead.",
+    )
+    args = parser.parse_args()
+
+    if args.message is not None:
+        run_message(args.message)
+        return
+
+    print("No message given, running the built-in examples instead.\n")
+    for index, message in enumerate(EXAMPLE_MESSAGES):
+        if index > 0:
+            print()
+        run_message(message)
 
 
 if __name__ == "__main__":
