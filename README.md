@@ -61,3 +61,50 @@ and a toggle to compare the quantum-derived geometry against the classical basel
 Then open the URL Vite prints (typically http://localhost:5173). This single command creates a
 Python virtualenv and installs backend dependencies if needed, installs frontend dependencies if
 needed, and starts both the FastAPI backend and the Vite dev server.
+
+## `path_visualizer/`
+
+A toy Feynman path-integral simulator, rendered as a live interference field between two
+draggable points. Feynman's picture of quantum mechanics: a particle going from a start point to
+an end point doesn't take one path — every possible path contributes an amplitude `e^(iS/hbar)`,
+where `S` is the classical action along that path. Add up the amplitudes of many sampled paths
+and square the result, and you get a real, observable interference pattern: where nearby paths
+have similar action their phases agree and add up brightly, where action varies quickly between
+nearby paths the phases scramble and cancel out to darkness. Shrinking `hbar` makes that phase
+spin faster for the same amount of detour, so only paths that stay close to the classical
+(least-action) trajectory keep interfering constructively — the field visibly narrows toward a
+single clean path. Growing `hbar` widens that same window, letting a much broader spread of paths
+interfere and produce rich fringe and lattice structure. This is the standard stationary-phase
+argument for how classical mechanics emerges from quantum mechanics, made interactive.
+
+The glowing field is not "the path" — it's the overlay of every sampled path at once. Brightness
+at a point means many different routes reinforce each other passing through it; darkness means
+they cancel out even though some path did go through that spot. What looks like a single clean
+trajectory at the classical extreme is just what's left once only the near-straight-line paths
+still agree with each other. (This is superposition over one particle's histories, not
+entanglement — entanglement needs two or more separate quantum systems correlated with each
+other, which is a different phenomenon demonstrated instead in `quantum_gravity/` above.)
+
+A second endpoint serves a small PyTorch network trained to predict the same field directly from
+`(start, end, hbar)`, without ever running the simulator — the same basic idea behind "world
+models" in AI: instead of repeatedly querying an expensive environment or simulator, train a fast
+network that mimics its output well enough to sample cheaply afterward. Toggling between
+"computed" and "learned" shows the trade-off directly: the learned field is visibly blurrier, the
+gross shape without the fine simulated texture, since a small non-convolutional network naturally
+smooths over what it wasn't given enough capacity or data to memorize exactly.
+
+```bash
+./path_visualizer/run.sh
+```
+
+Same single-command setup as `quantum_gravity/` — this one also trains the world model on its
+very first run (a few hundred quick examples generated from the real simulator, ~15-30 seconds on
+CPU) before it starts serving; later runs just load the cached model and start immediately. Once
+it's running, open http://localhost:5173 (the same URL Vite prints in the terminal) and try:
+
+- **Drag the two dots** to move the start and end points — the field recomputes live.
+- **The ħ slider** ("quantum ↔ classical") — slide toward classical to watch the field collapse
+  into a single clean trajectory; slide toward quantum to watch it bloom into fringes.
+- **The paths slider** — how many random paths get sampled per request; more paths, richer detail.
+- **The computed/learned toggle** — compare the real simulation against the trained network's
+  (visibly blurrier) guess at the same field.

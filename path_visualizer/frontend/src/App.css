@@ -1,0 +1,167 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #030308;
+  color: #e6e6ea;
+  font-family:
+    ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  overflow: hidden;
+}
+
+.app {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field-canvas {
+  position: relative;
+  width: min(80vw, 80vh);
+  aspect-ratio: 1;
+}
+
+.field-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.drag-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+  border-radius: 50%;
+  border: 2px solid #22d3ee;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: grab;
+  touch-action: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle-label {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.control-panel {
+  position: absolute;
+  top: clamp(16px, 3vw, 32px);
+  right: clamp(16px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px;
+  background: rgba(6, 6, 14, 0.55);
+  backdrop-filter: blur(6px);
+  width: clamp(180px, 22vw, 260px);
+  font-size: 12px;
+}
+
+.control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.control-row label {
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.control-row input[type="range"] {
+  width: 100%;
+  accent-color: #22d3ee;
+}
+
+.control-value {
+  align-self: flex-end;
+  color: rgba(255, 255, 255, 0.85);
+  font-variant-numeric: tabular-nums;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mode-toggle button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.55);
+  padding: 6px 0;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.mode-toggle button.active {
+  border-color: #22d3ee;
+  color: #22d3ee;
+}
+
+.caption {
+  position: absolute;
+  bottom: clamp(16px, 4vh, 32px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.error-banner {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  color: #ff6b6b;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .control-panel {
+    width: clamp(150px, 46vw, 220px);
+    padding: 12px 14px;
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .caption {
+    font-size: 10px;
+    white-space: normal;
+    width: 90vw;
+  }
+}
