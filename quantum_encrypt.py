@@ -24,7 +24,10 @@ who need it.
 
 import cirq
 
-from hello_hilbert import string_to_binary
+
+def string_to_binary(text: str) -> str:
+    """Convert each character of `text` into an 8-bit binary string."""
+    return "".join(format(ord(char), "08b") for char in text)
 
 
 def binary_to_string(binary: str) -> str:
