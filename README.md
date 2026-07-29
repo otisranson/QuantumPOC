@@ -1,7 +1,8 @@
 # QuantumPOC
 
-Small proof-of-concept scripts exploring [Cirq](https://quantumai.google/cirq), Google's Python
-framework for building and simulating quantum circuits.
+Small proof-of-concept scripts exploring quantum computing, mostly with
+[Cirq](https://quantumai.google/cirq), Google's Python framework for building and simulating
+quantum circuits.
 
 ## Setup
 
@@ -38,3 +39,25 @@ Morse to text.
 
 Run with no argument to instead run through a set of built-in example messages
 (`SOS HELP`, `HELLO`, `CQ DE W1AW 73`, `A`).
+
+## `quantum_gravity/`
+
+A full-stack toy demo of emergent bulk geometry from boundary entanglement, loosely inspired by
+the HaPPY code (a holographic quantum error-correcting code from the AdS/CFT correspondence).
+Six "boundary" qubits sit in a ring; a [Qiskit](https://www.ibm.com/quantum/qiskit) circuit
+entangles adjacent pairs by a tunable amount, and real von Neumann entanglement entropies
+(computed via partial trace, not approximated) are used to derive a deformable interior "bulk"
+geometry — more entanglement pushes the bulk outward toward the boundary, echoing the direction
+the Ryu-Takayanagi formula relates entropy to minimal-surface area; weak entanglement leaves it
+collapsed toward the center.
+A FastAPI backend exposes the geometry (and a classical random-graph baseline for contrast) as
+JSON; a React + D3 frontend renders it live, with sliders to tune entanglement strength per edge
+and a toggle to compare the quantum-derived geometry against the classical baseline.
+
+```bash
+./quantum_gravity/run.sh
+```
+
+Then open the URL Vite prints (typically http://localhost:5173). This single command creates a
+Python virtualenv and installs backend dependencies if needed, installs frontend dependencies if
+needed, and starts both the FastAPI backend and the Vite dev server.
