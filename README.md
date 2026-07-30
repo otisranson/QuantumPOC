@@ -4,12 +4,33 @@ Small proof-of-concept scripts exploring quantum computing, mostly with
 [Cirq](https://quantumai.google/cirq), Google's Python framework for building and simulating
 quantum circuits.
 
+## Contents
+
+- [`quantum_encrypt.py`](#quantum_encryptpy) — quantum random number generator one-time pad
+- [`quantum_morse/quantum_morse.py`](#quantum_morsequantum_morsepy) — Morse code over qubits
+- [`quantum_gravity/`](#quantum_gravity) — emergent bulk geometry from a toy HaPPY code
+- [`path_visualizer/`](#path_visualizer) — Feynman path-integral field with a learned world model
+
+## Prerequisites
+
+- **Python 3.10+** — for `quantum_encrypt.py`, `quantum_morse/`, and the backends of
+  `quantum_gravity/` and `path_visualizer/`.
+- **Node.js 18+ with npm** — only needed for the frontends of `quantum_gravity/` and
+  `path_visualizer/`; the other two scripts don't touch it.
+
 ## Setup
+
+This installs the dependencies for the two plain scripts below
+(`quantum_encrypt.py`, `quantum_morse/`):
 
 ```bash
 python3 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt
 ```
+
+`quantum_gravity/` and `path_visualizer/` are self-contained and don't use this venv — each has
+its own `run.sh` that creates its own backend venv and installs its own frontend dependencies on
+first run, as described in their sections below.
 
 ## `quantum_encrypt.py`
 
