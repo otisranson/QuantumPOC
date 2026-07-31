@@ -86,6 +86,19 @@ It also decrypts the ciphertext with a second, different random key to show the 
 garbage — a one-time pad is only secure if the exact same key is reused for decryption, is truly
 random, is the same length as the message, is never reused, and stays secret.
 
+Sample output (the key and ciphertext are freshly random each run):
+
+```
+Message: 'hello hilbert'
+
+Quantum-generated key: 01000101101001111111000111110000010100010101100011111101001110011101010101001011001111101011010000001000
+Ciphertext (bits):     00101101110000101001110110011100001111100111100010010101010100001011100100101001010110111100011001111100
+Ciphertext (hex):      2dc29d9c3e789550b9295bc67c
+
+Decrypted with correct key: 'hello hilbert'
+Decrypted with wrong key:   '\x96\x11\x17F\x81M\x15\x8f+\x10`o\x84'
+```
+
 ## `quantum_morse/quantum_morse.py`
 
 A Morse code device simulated on qubits. A message is translated to Morse, then to an ITU-timed
@@ -100,6 +113,23 @@ Morse to text.
 
 Run with no argument to instead run through a set of built-in example messages
 (`SOS HELP`, `HELLO`, `CQ DE W1AW 73`, `A`).
+
+Sample output:
+
+```
+$ ./.venv/bin/python quantum_morse/quantum_morse.py "HELLO WORLD"
+
+Message: 'HELLO WORLD'
+
+Morse:       .... . .-.. .-.. --- / .-- --- .-. .-.. -..
+Pulse train: 101010100010001011101010001011101010001110111011100000001011101110001110111011100010111010001011101010001110101
+
+Read back from qubits: 101010100010001011101010001011101010001110111011100000001011101110001110111011100010111010001011101010001110101
+Matches sent pulses:   True
+
+Decoded Morse: .... . .-.. .-.. --- / .-- --- .-. .-.. -..
+Decoded text:  'HELLO WORLD'
+```
 
 ## `quantum_gravity/`
 
