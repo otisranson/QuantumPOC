@@ -4,8 +4,19 @@ Small proof-of-concept scripts exploring quantum computing, mostly with
 [Cirq](https://quantumai.google/cirq), Google's Python framework for building and simulating
 quantum circuits.
 
+## ⭐ [`quantum_music/`](#quantum_music) — play the wavefunction
+
+![Quantum Music](quantum_music/screenshots/screenshot.png)
+
+The flagship of this repo. A playable piano keyboard where every key *is* a quantum gate — press
+one and you hear a tone and watch the gate land on a live circuit diagram in real time. It's the
+most immediate, tactile way in here to feel what a quantum circuit actually is: not a diagram you
+read, but one you play. See the [full writeup below](#quantum_music) for how it works and how to
+run it.
+
 ## Contents
 
+- [`quantum_music/`](#quantum_music) — a playable piano that builds a quantum circuit as you play
 - [`quantum_encrypt.py`](#quantum_encryptpy) — quantum random number generator one-time pad
 - [`quantum_morse/quantum_morse.py`](#quantum_morsequantum_morsepy) — Morse code over qubits
 - [`quantum_gravity/`](#quantum_gravity) — emergent bulk geometry from a toy HaPPY code
@@ -15,8 +26,8 @@ quantum circuits.
 
 - **Python 3.10+** — for `quantum_encrypt.py`, `quantum_morse/`, and the backends of
   `quantum_gravity/` and `path_visualizer/`.
-- **Node.js 18+ with npm** — only needed for the frontends of `quantum_gravity/` and
-  `path_visualizer/`; the other two scripts don't touch it.
+- **Node.js 18+ with npm** — needed for `quantum_music/` and the frontends of `quantum_gravity/`
+  and `path_visualizer/`; `quantum_encrypt.py` and `quantum_morse/` don't touch it.
 
 ## Setup
 
@@ -31,6 +42,35 @@ python3 -m venv .venv
 `quantum_gravity/` and `path_visualizer/` are self-contained and don't use this venv — each has
 its own `run.sh` that creates its own backend venv and installs its own frontend dependencies on
 first run, as described in their sections below.
+
+## `quantum_music/`
+
+A playable piano keyboard, one octave, where each of the twelve keys is bound to a quantum gate
+instead of just a note. Press a key and two things happen at once: an audible sine-wave tone
+plays (standard C4–B4 piano frequencies via the Web Audio API), and its gate shows up on a live
+circuit diagram over a two-qubit register, `q0` and `q1`. White keys carry the classic gate set —
+`H X Y Z S T CNOT`; black keys carry rotations and a second entangling pair — `Rx Ry Rz CZ SWAP`.
+Single-qubit gates land on `q0` (except `Rz`, which targets `q1`, so both wires get some traffic),
+and `CNOT` / `CZ` / `SWAP` span both.
+
+There are two modes. **Freeplay** is instant gratification — every keypress plays its tone and
+pops up an info card for that one gate (symbol, name, description, target qubit), with nothing
+accumulating. **Record** turns the piano into a composer: press Record, and every key you play is
+both heard and appended to the circuit diagram, gate after gate in standard circuit notation
+(control dots, `⊕` targets, `×` swaps) rendered live in SVG; press End to lock the finished
+circuit in place. A gear-icon Settings panel lets you remap any of the twelve keys to any keyboard
+key, in case the default `A S D F G H J` / `W E T Y U` layout doesn't fit your hands.
+
+No backend, no external UI libraries — just React, Tailwind, and the Web Audio API.
+
+```bash
+cd quantum_music
+npm install
+npm run dev
+```
+
+Then open the URL Vite prints (typically http://localhost:5173) and start playing — either by
+clicking keys or by typing on the keyboard mapping shown in the corner of each key.
 
 ## `quantum_encrypt.py`
 
