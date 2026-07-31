@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-paper text-ink;
+  font-family: 'Spectral', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+::selection {
+  background-color: rgba(181, 132, 42, 0.35);
+}
